@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucidlogs/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,17 +35,25 @@ class _RootPageState extends State<RootPage> {
       appBar: AppBar(
         title: const Text('Lucid Logs'), // Adding a text to the AppBar
       ),
-      backgroundColor: Colors.white70,
+      body: const HomePage(),
+      backgroundColor: const Color.fromARGB(255, 247, 187, 207),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint("button pushed");
         },
         child: const Icon(Icons.home),
       ),
-      bottomNavigationBar: NavigationBar(destinations: const [
-        NavigationDestination(icon: Icon(Icons.home), label: "home"),
-        NavigationDestination(icon: Icon(Icons.plus_one), label: "plus"),
-      ]),
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home), label: "home"),
+          NavigationDestination(icon: Icon(Icons.plus_one), label: "plus"),
+      ],
+      onDestinationSelected: (int index){
+        setState(() {
+          currentPage = index;  
+        });
+      },
+      selectedIndex: currentPage,),
     );
   }
 }
