@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucidlogs/home.dart';
+import 'package:lucidlogs/profile_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,13 +30,14 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int currentPage = 0;
+  List<Widget> pages = const [HomePage(), ProfilePage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lucid Logs'), // Adding a text to the AppBar
       ),
-      body: const HomePage(),
+      body: pages[currentPage],
       backgroundColor: const Color.fromARGB(255, 247, 187, 207),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -45,8 +47,8 @@ class _RootPageState extends State<RootPage> {
       ),
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: "home"),
-          NavigationDestination(icon: Icon(Icons.plus_one), label: "plus"),
+          NavigationDestination(icon: Icon(Icons.home), label: "Home"),
+          NavigationDestination(icon: Icon(Icons.plumbing_sharp), label: "Profile"),
       ],
       onDestinationSelected: (int index){
         setState(() {
