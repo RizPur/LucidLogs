@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1027251168998",
+    "project_id": "lucidlogs-flutter",
+    "storage_bucket": "lucidlogs-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027251168998:android:0ee894b81eca51bfd3bd27",
+        "android_client_info": {
+          "package_name": "com.rizpur.lucidlogs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxmEleI_lG5roPKipQ53wl4XhCbS7Zbn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
