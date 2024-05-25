@@ -54,41 +54,64 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Register"),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _email,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: "Enter your email here"
-            ),
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: "Enter your password here"
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              print("Please wait..");
-              await Firebase.initializeApp(
-                options: DefaultFirebaseOptions.currentPlatform,
-              );
-              final email = _email.text;
-              final password = _password.text;
-              final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-              print(user);
-          },
-            child: const Text("Register"),
-          ),
-        ],
+      appBar: AppBar(title: const Text("Register")),
+      body: FutureBuilder(
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          // Print connection state
+          print('Connection state: ${snapshot.connectionState}');
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print('Firebase initialization is still in progress.');
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print('Error occurred: ${snapshot.error}');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            print('Firebase initialization completed successfully.');
+            return Column(
+              children: [
+                TextField(
+                  controller: _email,
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    hintText: "Enter your email here",
+                  ),
+                ),
+                TextField(
+                  controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    hintText: "Enter your password here",
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    print("Register button pressed");
+                    final email = _email.text;
+                    final password = _password.text;
+                    print("Attempting to register with email: $email and password: $password");
+                    try {
+                      final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+                      print('User registered successfully: ${user.user?.email}');
+                    } catch (e) {
+                      print('Error registering user: $e');
+                    }
+                  },
+                  child: const Text("Register"),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
