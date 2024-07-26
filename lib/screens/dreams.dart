@@ -57,7 +57,31 @@ class _DreamsPageState extends State<DreamsPage> {
   }
 
   void updateDream(Dream dream){
-    textController.text = dream.content;
+    textController.text = dream.content; //fill textfield with dream content
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text("Modify Dream"),
+        content: TextField(controller: textController),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              //update
+              context
+                .read<DreamDatabase>()
+                .updateDream(dream.id, textController.text);
+              textController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text("Update"),
+          )
+        ],
+      )
+    );
+  }
+
+  void deleteDream(int id){
+    context.read<DreamDatabase>().deleteDream(id);
   }
 
   @override
@@ -81,6 +105,13 @@ class _DreamsPageState extends State<DreamsPage> {
           return ListTile(
             title: Text(dream.content),
             subtitle: Text(formatDate(dream.createdAt)),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(onPressed: () => updateDream(dream), icon: const Icon(Icons.pending)),
+                IconButton(onPressed: () => deleteDream(dream.id), icon: const Icon(Icons.delete),)
+              ],
+            ),
           );
         },
       ),
