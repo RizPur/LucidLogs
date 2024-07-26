@@ -73,10 +73,25 @@ int _dreamEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.category.length * 3;
+  {
+    final value = object.category;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.content.length * 3;
-  bytesCount += 3 + object.feeling.length * 3;
-  bytesCount += 3 + object.photoPath.length * 3;
+  {
+    final value = object.feeling;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.photoPath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.tags.length * 3;
   {
     for (var i = 0; i < object.tags.length; i++) {
@@ -109,13 +124,13 @@ Dream _dreamDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Dream();
-  object.category = reader.readString(offsets[0]);
+  object.category = reader.readStringOrNull(offsets[0]);
   object.content = reader.readString(offsets[1]);
   object.createdAt = reader.readDateTime(offsets[2]);
-  object.feeling = reader.readString(offsets[3]);
+  object.feeling = reader.readStringOrNull(offsets[3]);
   object.id = id;
-  object.isLucid = reader.readBool(offsets[4]);
-  object.photoPath = reader.readString(offsets[5]);
+  object.isLucid = reader.readBoolOrNull(offsets[4]);
+  object.photoPath = reader.readStringOrNull(offsets[5]);
   object.tags = reader.readStringList(offsets[6]) ?? [];
   return object;
 }
@@ -128,17 +143,17 @@ P _dreamDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
       return (reader.readDateTime(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readStringList(offset) ?? []) as P;
     default:
@@ -234,8 +249,24 @@ extension DreamQueryWhere on QueryBuilder<Dream, Dream, QWhereClause> {
 }
 
 extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'category',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'category',
+      ));
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -248,7 +279,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -263,7 +294,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -278,8 +309,8 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -547,8 +578,24 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'feeling',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'feeling',
+      ));
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -561,7 +608,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -576,7 +623,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -591,8 +638,8 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> feelingBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -729,7 +776,24 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> isLucidEqualTo(bool value) {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> isLucidIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isLucid',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> isLucidIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isLucid',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> isLucidEqualTo(
+      bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isLucid',
@@ -738,8 +802,24 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'photoPath',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'photoPath',
+      ));
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -752,7 +832,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -767,7 +847,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -782,8 +862,8 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1302,7 +1382,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, String, QQueryOperations> categoryProperty() {
+  QueryBuilder<Dream, String?, QQueryOperations> categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
     });
@@ -1320,19 +1400,19 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, String, QQueryOperations> feelingProperty() {
+  QueryBuilder<Dream, String?, QQueryOperations> feelingProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'feeling');
     });
   }
 
-  QueryBuilder<Dream, bool, QQueryOperations> isLucidProperty() {
+  QueryBuilder<Dream, bool?, QQueryOperations> isLucidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isLucid');
     });
   }
 
-  QueryBuilder<Dream, String, QQueryOperations> photoPathProperty() {
+  QueryBuilder<Dream, String?, QQueryOperations> photoPathProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'photoPath');
     });

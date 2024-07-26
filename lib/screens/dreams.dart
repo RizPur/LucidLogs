@@ -8,16 +8,12 @@ class DreamsPage extends StatefulWidget {
 
   @override
   State<DreamsPage> createState() => _DreamsPageState();
-
 }
 
 class _DreamsPageState extends State<DreamsPage> {
-
-  // Create
-
   final textController = TextEditingController();
 
-  void createDream(){
+  void createDream() {
     showDialog(
       context: context, 
       builder: (context) => AlertDialog(
@@ -27,47 +23,53 @@ class _DreamsPageState extends State<DreamsPage> {
         actions: [
           MaterialButton(
             onPressed: () {
-              //add text to db then pop box
+              print('Logging dream: ${textController.text}');
+              // Add text to db then pop box
               context.read<DreamDatabase>().addDream(textController.text); 
               Navigator.pop(context);
             },
-            child: const Text("Log Dream"),),
+            child: const Text("Log Dream"),
+          ),
         ],
-      )
+      ),
     );
   }
 
-  // Read
-  void readNotes() {
-    context.watch<DreamDatabase>().getDreams();
+  @override
+  void initState() {
+    super.initState();
+    print('Initializing DreamsPage...');
+    readDreams();
   }
-  //Update
 
-  //Delete
+  // Read
+  void readDreams() {
+    print('Fetching dreams from database...');
+    context.read<DreamDatabase>().getDreams();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    //dream database 
+    // Dream database 
     final dreamDatabase = context.watch<DreamDatabase>();
     List<Dream> currentDreams = dreamDatabase.currentDreams;
-
+    print('Current dreams: ${currentDreams.length}');
 
     return Scaffold(
       appBar: AppBar(title: const Text("Lucid Logs")),
       floatingActionButton: FloatingActionButton(
         onPressed: createDream,
-        child: const Icon(Icons.add)
+        child: const Icon(Icons.add),
       ),
       body: ListView.builder(
         itemCount: currentDreams.length,
         itemBuilder: (context, index) {
-          final dream = currentDreams[index]; //get note
-          
+          final dream = currentDreams[index]; // Get dream
+          print('Displaying dream: ${dream.content}');
           return ListTile(
-            title: Text(dream.content)
+            title: Text(dream.content),
           );
-        }
+        },
       ),
     );
   }
