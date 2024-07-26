@@ -8,10 +8,10 @@ class Dream {
   Id id = Isar.autoIncrement;
   late String content;
   late DateTime createdAt;
-  String photoPath = '';
-  String feeling = 'Neutral';
-  String category = '';
-  bool isLucid = false;
+  String? photoPath = '';
+  String? feeling = 'Neutral';
+  String? category = '';
+  bool? isLucid = false;
   
   List<String> tags = [];
 }
