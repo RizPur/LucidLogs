@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:lucidlogs/models/dream.dart';
 import 'package:path_provider/path_provider.dart';
 
-class DreamDatabase {
+class DreamDatabase extends ChangeNotifier{
   static late Isar isar;
 
   // I N I T I A L I Z E 
@@ -32,6 +33,7 @@ class DreamDatabase {
     List<Dream> allDreams = await isar.dreams.where().findAll();
     currentDreams.clear();
     currentDreams.addAll(allDreams);
+    notifyListeners();
   }
   // U P D A T E
 

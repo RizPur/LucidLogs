@@ -51,11 +51,6 @@ const DreamSchema = CollectionSchema(
       id: 6,
       name: r'tags',
       type: IsarType.stringList,
-    ),
-    r'title': PropertySchema(
-      id: 7,
-      name: r'title',
-      type: IsarType.string,
     )
   },
   estimateSize: _dreamEstimateSize,
@@ -89,7 +84,6 @@ int _dreamEstimateSize(
       bytesCount += value.length * 3;
     }
   }
-  bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
 
@@ -106,7 +100,6 @@ void _dreamSerialize(
   writer.writeBool(offsets[4], object.isLucid);
   writer.writeString(offsets[5], object.photoPath);
   writer.writeStringList(offsets[6], object.tags);
-  writer.writeString(offsets[7], object.title);
 }
 
 Dream _dreamDeserialize(
@@ -124,7 +117,6 @@ Dream _dreamDeserialize(
   object.isLucid = reader.readBool(offsets[4]);
   object.photoPath = reader.readString(offsets[5]);
   object.tags = reader.readStringList(offsets[6]) ?? [];
-  object.title = reader.readString(offsets[7]);
   return object;
 }
 
@@ -149,8 +141,6 @@ P _dreamDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 6:
       return (reader.readStringList(offset) ?? []) as P;
-    case 7:
-      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1091,134 +1081,6 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
       );
     });
   }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'title',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'title',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'title',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'title',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> titleIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'title',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension DreamQueryObject on QueryBuilder<Dream, Dream, QFilterCondition> {}
@@ -1295,18 +1157,6 @@ extension DreamQuerySortBy on QueryBuilder<Dream, Dream, QSortBy> {
   QueryBuilder<Dream, Dream, QAfterSortBy> sortByPhotoPathDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'photoPath', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> sortByTitle() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'title', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> sortByTitleDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'title', Sort.desc);
     });
   }
 }
@@ -1395,18 +1245,6 @@ extension DreamQuerySortThenBy on QueryBuilder<Dream, Dream, QSortThenBy> {
       return query.addSortBy(r'photoPath', Sort.desc);
     });
   }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> thenByTitle() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'title', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> thenByTitleDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'title', Sort.desc);
-    });
-  }
 }
 
 extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
@@ -1453,13 +1291,6 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
   QueryBuilder<Dream, Dream, QDistinct> distinctByTags() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tags');
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QDistinct> distinctByTitle(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1510,12 +1341,6 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
   QueryBuilder<Dream, List<String>, QQueryOperations> tagsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tags');
-    });
-  }
-
-  QueryBuilder<Dream, String, QQueryOperations> titleProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'title');
     });
   }
 }

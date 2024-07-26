@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:lucidlogs/models/dream_db.dart';
+import 'package:provider/provider.dart';
 import 'screens/dreams.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DreamDatabase.initialize();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => DreamDatabase(),
+      child: const MyApp())
+  );
 }
 
 class MyApp extends StatelessWidget {
