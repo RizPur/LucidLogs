@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucidlogs/models/dream_db.dart';
+import 'package:lucidlogs/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'screens/dreams.dart';
 
@@ -8,9 +9,12 @@ void main() async {
   await DreamDatabase.initialize();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => DreamDatabase(),
-      child: const MyApp())
+   MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => DreamDatabase()),
+    ChangeNotifierProvider(create: (context) => ThemeProvider())
+   ],
+   child: const MyApp(),
+   ), 
   );
 }
 
@@ -22,10 +26,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: DreamsPage(),
+      home: const DreamsPage(),
+      theme: Provider.of<ThemeProvider>(context).themeData
     );
   }
 }

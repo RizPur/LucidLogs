@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lucidlogs/components/drawer.dart';
 import 'package:lucidlogs/models/dream.dart';
 import 'package:lucidlogs/models/dream_db.dart';
 import 'package:provider/provider.dart';
@@ -92,28 +94,49 @@ class _DreamsPageState extends State<DreamsPage> {
     // print('Current dreams: ${currentDreams.length}');
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Lucid Logs")),
+      appBar: AppBar(
+        title: Text("Dreams", style: GoogleFonts.dmSerifText(fontSize: 36.0)),
+        elevation: 0,
+        backgroundColor: Colors.transparent
+      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: createDream,
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: currentDreams.length,
-        itemBuilder: (context, index) {
-          final dream = currentDreams[index]; // Get dream
-          // print('Displaying dream: ${dream.content}');
-          return ListTile(
-            title: Text(dream.content),
-            subtitle: Text(formatDate(dream.createdAt)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(onPressed: () => updateDream(dream), icon: const Icon(Icons.pending)),
-                IconButton(onPressed: () => deleteDream(dream.id), icon: const Icon(Icons.delete),)
-              ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [ 
+          // Heading
+          // Padding(padding: const EdgeInsets.all(25.0),
+          //   child: 
+          //   // Text("Lucid Logs", 
+          //   // style: GoogleFonts.dmSerifText(fontSize: 48, color: Theme.of(context).colorScheme.inversePrimary)
+          //   ),
+          // ),
+          // LIST of dreams
+          Expanded(
+            child: ListView.builder(
+              itemCount: currentDreams.length,
+              itemBuilder: (context, index) {
+                final dream = currentDreams[index]; // Get dream
+                // print('Displaying dream: ${dream.content}');
+                return ListTile(
+                  title: Text(dream.content),
+                  subtitle: Text(formatDate(dream.createdAt)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(onPressed: () => updateDream(dream), icon: const Icon(Icons.pending)),
+                      IconButton(onPressed: () => deleteDream(dream.id), icon: const Icon(Icons.delete),)
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
