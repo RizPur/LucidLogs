@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucidlogs/components/drawer.dart';
+import 'package:lucidlogs/components/dream_tile.dart';
 import 'package:lucidlogs/models/dream.dart';
 import 'package:lucidlogs/models/dream_db.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _DreamsPageState extends State<DreamsPage> {
     showDialog(
       context: context, 
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         content: TextField(
           controller: textController,
         ),
@@ -63,6 +65,7 @@ class _DreamsPageState extends State<DreamsPage> {
     showDialog(
       context: context, 
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: const Text("Modify Dream"),
         content: TextField(controller: textController),
         actions: [
@@ -96,7 +99,7 @@ class _DreamsPageState extends State<DreamsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dreams", style: GoogleFonts.dmSerifText(fontSize: 36.0)),
-        elevation: 0,
+        // elevation: 0,
         backgroundColor: Colors.transparent
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -120,19 +123,9 @@ class _DreamsPageState extends State<DreamsPage> {
             child: ListView.builder(
               itemCount: currentDreams.length,
               itemBuilder: (context, index) {
-                final dream = currentDreams[index]; // Get dream
+                final dream = currentDreams[index]; // Get 1 dream
                 // print('Displaying dream: ${dream.content}');
-                return ListTile(
-                  title: Text(dream.content),
-                  subtitle: Text(formatDate(dream.createdAt)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(onPressed: () => updateDream(dream), icon: const Icon(Icons.pending)),
-                      IconButton(onPressed: () => deleteDream(dream.id), icon: const Icon(Icons.delete),)
-                    ],
-                  ),
-                );
+                return DreamTile(text: dream.content, dateTime: Text(formatDate(dream.createdAt)), onEdit: () => updateDream(dream), onDelete: () => deleteDream(dream.id));
               },
             ),
           ),
