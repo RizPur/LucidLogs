@@ -99,7 +99,7 @@ class _DreamsPageState extends State<DreamsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dreams", style: GoogleFonts.dmSerifText(fontSize: 36.0)),
-        // elevation: 0,
+        // elevation: 10,
         backgroundColor: Colors.transparent
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -125,7 +125,7 @@ class _DreamsPageState extends State<DreamsPage> {
               itemBuilder: (context, index) {
                 final dream = currentDreams[index]; // Get 1 dream
                 // print('Displaying dream: ${dream.content}');
-                return DreamTile(text: dream.content, dateTime: Text(formatDate(dream.createdAt)), onEdit: () => updateDream(dream), onDelete: () => deleteDream(dream.id));
+                return DreamTile(text: dream.content, dateTime: formatDate(dream.createdAt), onEdit: () => updateDream(dream), onDelete: () => deleteDream(dream.id));
               },
             ),
           ),

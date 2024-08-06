@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 class DreamTile extends StatelessWidget {
   final String text;
-  final Text dateTime;
+  final String dateTime;
   final void Function()? onEdit;
   final void Function()? onDelete;
 
@@ -17,9 +16,10 @@ class DreamTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8)
       ),
       margin: const EdgeInsets.only(top: 10, left: 25, right: 25),
+      padding: const EdgeInsets.all(8.0), // Add padding inside the container
       child: ListTile(
         title: Text(text),
-        subtitle: dateTime,
+        subtitle: Text(dateTime),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
