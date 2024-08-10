@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lucidlogs/api/aijson.dart'; // Import the AI service
+import 'package:provider/provider.dart';
+import 'package:lucidlogs/models/dream_db.dart';
 
 class CreateDreamPage extends StatefulWidget {
   final Function(String) onDreamAdded;
@@ -12,8 +13,6 @@ class CreateDreamPage extends StatefulWidget {
 
 class _CreateDreamPageState extends State<CreateDreamPage> {
   final TextEditingController _dreamController = TextEditingController();
-  final AIService _aiService = AIService();
-
   bool _isLoading = false;
   String? _aiResponse;
 
@@ -24,7 +23,8 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
       });
 
       try {
-        final aiResponse = await _aiService.analyzeDream(_dreamController.text);
+        final dreamDatabase = context.read<DreamDatabase>();
+        final aiResponse = await dreamDatabase.sendDreamToBackend(_dreamController.text);
         setState(() {
           _aiResponse = aiResponse;
         });
@@ -40,13 +40,21 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
     }
   }
 
+  void _runTroubleshoot() async {
+    final dreamDatabase = context.read<DreamDatabase>();
+    final troubleshootResponse = await dreamDatabase.troubleshootRequest();
+    setState(() {
+      _aiResponse = troubleshootResponse;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Dream'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -92,9 +100,7 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
             ElevatedButton(
               onPressed: _isLoading
                   ? null // Disable the button while loading
-                  : () {
-                      _analyzeDream();
-                    },
+                  : _analyzeDream,
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(
                     Colors.lightBlue),
@@ -117,6 +123,11 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
                       color: Colors.white,
                     )
                   : const Text('Analyze Dream with AI'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _runTroubleshoot,
+              child: const Text('Run Troubleshoot'),
             ),
             const SizedBox(height: 16),
             if (_aiResponse != null)

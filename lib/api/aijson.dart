@@ -25,12 +25,42 @@ class AIService {
       }),
     );
 
+    
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       // Extract the relevant information from the response
       return data['result']; // Adjust based on API response structure
     } else {
       throw Exception('Failed to analyze dream');
+    }
+  }
+
+ Future<String> troubleshootRequest() async {
+    final url = Uri.parse(apiUrl);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "model": "ask",
+          "messages": [
+            {"role": "user", "content": "I dreamt about eating food!"}
+          ]
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      print('Response headers: ${response.headers}');
+
+      return response.body;
+    } catch (e) {
+      print('Error during troubleshooting request: $e');
+      return e.toString();
     }
   }
 }
