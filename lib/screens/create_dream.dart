@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucidlogs/api/aijson.dart'; // Import the AI service
 
 class CreateDreamPage extends StatefulWidget {
   final Function(String) onDreamAdded;
@@ -11,6 +12,33 @@ class CreateDreamPage extends StatefulWidget {
 
 class _CreateDreamPageState extends State<CreateDreamPage> {
   final TextEditingController _dreamController = TextEditingController();
+  final AIService _aiService = AIService();
+
+  bool _isLoading = false;
+  String? _aiResponse;
+
+  void _analyzeDream() async {
+    if (_dreamController.text.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        final aiResponse = await _aiService.analyzeDream(_dreamController.text);
+        setState(() {
+          _aiResponse = aiResponse;
+        });
+      } catch (e) {
+        setState(() {
+          _aiResponse = "Failed to analyze dream: $e";
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +53,6 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
           children: [
             TextField(
               controller: _dreamController,
-              // style: TextStyle(backgroundColor: Colors.red),
               maxLines: 10,
               decoration: const InputDecoration(
                 hintText: 'Describe your dream...',
@@ -41,47 +68,65 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
                 }
               },
               style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Background color
-                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0), // Padding inside the button
-                  ),
-                  textStyle: WidgetStateProperty.all<TextStyle>(
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.inversePrimary)  , // Text style
-                  ),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Rounded corners
-                    ),
-                  ), 
+                backgroundColor: WidgetStateProperty.all<Color>(
+                    Theme.of(context).colorScheme.secondary),
+                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 20.0),
                 ),
+                textStyle: WidgetStateProperty.all<TextStyle>(
+                  TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary),
+                ),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
               child: const Text('Log Dream'),
             ),
+            const SizedBox(height: 16), // Adding some space between buttons
             ElevatedButton(
-              onPressed: () {
-                if (_dreamController.text.isNotEmpty) {
-                  widget.onDreamAdded(_dreamController.text);
-                  Navigator.pop(context);
-                }
-              },
-              
+              onPressed: _isLoading
+                  ? null // Disable the button while loading
+                  : () {
+                      _analyzeDream();
+                    },
               style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.lightBlue), // Background color
-                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0), // Padding inside the button
-                  ),
-                  textStyle: WidgetStateProperty.all<TextStyle>(
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Text style
-                  ),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Rounded corners
-                    ),
-                  ), 
+                backgroundColor: WidgetStateProperty.all<Color>(
+                    Colors.lightBlue),
+                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 20.0),
                 ),
-              child: const Text('Analyze Dream with AI'),
-                         
+                textStyle: WidgetStateProperty.all<TextStyle>(
+                  const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
-
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Text('Analyze Dream with AI'),
+            ),
+            const SizedBox(height: 16),
+            if (_aiResponse != null)
+              Text(
+                'AI Analysis: $_aiResponse',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
           ],
         ),
       ),

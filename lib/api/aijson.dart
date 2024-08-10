@@ -1,26 +1,27 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class AIService {
-  final String apiUrl = dotenv.env['API_URL'] ?? '';// Replace with the correct endpoint
-  final String apiKey = dotenv.env['API_KEY'] ?? '';
-  
+
+  // final String apiKey = dotenv.env['API_KEY'] ?? '';
+  final String apiUrl = 'https://296a-72-252-123-133.ngrok-free.app/chat/completions'; // Load the backend URL from .env
 
   // AIService(this.apiKey);
 
-  Future<String> analyzeDream(String dreamContent) async {
-    final url = Uri.parse(apiUrl + "analyze"); // Adjust endpoint as needed
+ Future<String> analyzeDream(String dreamContent) async {
+    final url = Uri.parse(apiUrl);
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
       },
       body: jsonEncode({
-        'text': dreamContent,
-        // Add other parameters required by AIJSON here
+        "model": "ask",
+        "messages": [
+          {"role": "user", "content": dreamContent}
+        ]
       }),
     );
 
