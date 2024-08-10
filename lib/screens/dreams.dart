@@ -6,6 +6,7 @@ import 'package:lucidlogs/models/dream.dart';
 import 'package:lucidlogs/models/dream_db.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:lucidlogs/screens/create_dream.dart'; // Import the new page
 
 class DreamsPage extends StatefulWidget {
   const DreamsPage({super.key});
@@ -20,31 +21,6 @@ class _DreamsPageState extends State<DreamsPage> {
   String formatDate(DateTime dt){
     final DateFormat dateTime = DateFormat('dd-MM-yyyy HH:mm');
     return dateTime.format(dt);
-  }
-
-  void createDream() {
-    showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        content: TextField(
-          controller: textController,
-        ),
-        actions: [
-          MaterialButton(
-            onPressed: () {
-              print('Logging dream: ${textController.text}');
-              // Add text to db, clear textbox then pop box
-              context.read<DreamDatabase>().addDream(textController.text); 
-              textController.clear();
-              Navigator.pop(context);
-              
-            },
-            child: const Text("Log Dream"),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -89,43 +65,50 @@ class _DreamsPageState extends State<DreamsPage> {
     context.read<DreamDatabase>().deleteDream(id);
   }
 
+  void navigateToAddDreamPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateDreamPage(
+          onDreamAdded: (dreamContent) async {
+            await context.read<DreamDatabase>().addDream(dreamContent);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Dream database 
     final dreamDatabase = context.watch<DreamDatabase>();
     List<Dream> currentDreams = dreamDatabase.currentDreams;
-    // print('Current dreams: ${currentDreams.length}');
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Dreams", style: GoogleFonts.dmSerifText(fontSize: 36.0)),
-        // elevation: 10,
-        backgroundColor: Colors.transparent
+        backgroundColor: Colors.transparent,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: createDream,
+        onPressed: navigateToAddDreamPage,
         child: const Icon(Icons.add),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [ 
-          // Heading
-          // Padding(padding: const EdgeInsets.all(25.0),
-          //   child: 
-          //   // Text("Lucid Logs", 
-          //   // style: GoogleFonts.dmSerifText(fontSize: 48, color: Theme.of(context).colorScheme.inversePrimary)
-          //   ),
-          // ),
-          // LIST of dreams
+        children: [
           Expanded(
             child: ListView.builder(
               itemCount: currentDreams.length,
               itemBuilder: (context, index) {
                 final dream = currentDreams[index]; // Get 1 dream
-                // print('Displaying dream: ${dream.content}');
-                return DreamTile(text: dream.content, dateTime: formatDate(dream.createdAt), onEdit: () => updateDream(dream), onDelete: () => deleteDream(dream.id));
+                return DreamTile(
+                  text: dream.content, 
+                  dateTime: formatDate(dream.createdAt), 
+                  onEdit: () => updateDream(dream), 
+                  onDelete: () => deleteDream(dream.id)
+                );
               },
             ),
           ),
