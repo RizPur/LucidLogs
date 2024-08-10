@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lucidlogs/models/dream_db.dart';
 import 'package:lucidlogs/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'screens/dreams.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DreamDatabase.initialize();
+  await dotenv.load(fileName: ".env");
 
   runApp(
    MultiProvider(providers: [
