@@ -85,117 +85,119 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
       appBar: AppBar(
         title: const Text('Add New Dream'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _dreamController,
-              maxLines: 10,
-              decoration: const InputDecoration(
-                hintText: 'Describe your dream...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Tags input
-            TextField(
-              controller: _tagsController,
-              decoration: const InputDecoration(
-                hintText: 'Enter tags (comma-separated)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Feeling selection
-            DropdownButtonFormField<String>(
-              value: _selectedFeeling,
-              items: feelings.map((feeling) {
-                return DropdownMenuItem<String>(
-                  value: feeling,
-                  child: Text(feeling),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedFeeling = newValue!;
-                });
-              },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Select Feeling',
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Lucid checkbox
-            CheckboxListTile(
-              title: const Text('Was this a lucid dream?'),
-              value: _isLucid,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  _isLucid = newValue ?? false;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-
-            ElevatedButton(
-              onPressed: _logDream,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.secondary),
-                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _dreamController,
+                maxLines: 10,
+                decoration: const InputDecoration(
+                  hintText: 'Describe your dream...',
+                  border: OutlineInputBorder(),
                 ),
-                textStyle: WidgetStateProperty.all<TextStyle>(
-                  TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.inversePrimary),
+              ),
+              const SizedBox(height: 16),
+        
+              // Tags input
+              TextField(
+                controller: _tagsController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter tags (comma-separated)',
+                  border: OutlineInputBorder(),
                 ),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              ),
+              const SizedBox(height: 16),
+        
+              // Feeling selection
+              DropdownButtonFormField<String>(
+                value: _selectedFeeling,
+                items: feelings.map((feeling) {
+                  return DropdownMenuItem<String>(
+                    value: feeling,
+                    child: Text(feeling),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedFeeling = newValue!;
+                  });
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Select Feeling',
+                ),
+              ),
+              const SizedBox(height: 16),
+        
+              // Lucid checkbox
+              CheckboxListTile(
+                title: const Text('Was this a lucid dream?'),
+                value: _isLucid,
+                onChanged: (bool? newValue) {
+                  setState(() {
+                    _isLucid = newValue ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+        
+              ElevatedButton(
+                onPressed: _logDream,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(
+                      Theme.of(context).colorScheme.secondary),
+                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                  ),
+                  textStyle: WidgetStateProperty.all<TextStyle>(
+                    TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.inversePrimary),
+                  ),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   ),
                 ),
+                child: const Text('Log Dream'),
               ),
-              child: const Text('Log Dream'),
-            ),
-            const SizedBox(height: 16), // Adding some space between buttons
-            ElevatedButton(
-              onPressed: _isLoading ? null : _analyzeDream,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(Colors.lightBlue),
-                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                ),
-                textStyle: WidgetStateProperty.all<TextStyle>(
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+              const SizedBox(height: 16), // Adding some space between buttons
+              ElevatedButton(
+                onPressed: _isLoading ? null : _analyzeDream,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.lightBlue),
+                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                  ),
+                  textStyle: WidgetStateProperty.all<TextStyle>(
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                   ),
                 ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Analyze Dream with AI'),
               ),
-              child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Analyze Dream with AI'),
-            ),
-            const SizedBox(height: 16),
-            if (_aiResponse != null)
-              Text(
-                'AI Analysis: $_aiResponse',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
+              const SizedBox(height: 16),
+              if (_aiResponse != null)
+                Text(
+                  'AI Analysis: $_aiResponse',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
