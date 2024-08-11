@@ -6,7 +6,8 @@ import 'package:lucidlogs/models/dream.dart';
 import 'package:lucidlogs/models/dream_db.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:lucidlogs/screens/create_dream.dart'; // Import the new page
+import 'package:lucidlogs/screens/create_dream.dart';
+import 'package:lucidlogs/screens/one_dream.dart'; // Import the detail page
 
 class DreamsPage extends StatefulWidget {
   const DreamsPage({super.key});
@@ -18,7 +19,7 @@ class DreamsPage extends StatefulWidget {
 class _DreamsPageState extends State<DreamsPage> {
   final textController = TextEditingController();
 
-  String formatDate(DateTime dt){
+  String formatDate(DateTime dt) {
     final DateFormat dateTime = DateFormat('dd-MM-yyyy HH:mm');
     return dateTime.format(dt);
   }
@@ -36,32 +37,31 @@ class _DreamsPageState extends State<DreamsPage> {
     context.read<DreamDatabase>().getDreams();
   }
 
-  void updateDream(Dream dream){
+  void updateDream(Dream dream) {
     textController.text = dream.content; //fill textfield with dream content
     showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text("Modify Dream"),
-        content: TextField(controller: textController),
-        actions: [
-          MaterialButton(
-            onPressed: () {
-              //update
-              context
-                .read<DreamDatabase>()
-                .updateDream(dream.id, textController.text);
-              textController.clear();
-              Navigator.pop(context);
-            },
-            child: const Text("Update"),
-          )
-        ],
-      )
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              title: const Text("Modify Dream"),
+              content: TextField(controller: textController),
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    //update
+                    context
+                        .read<DreamDatabase>()
+                        .updateDream(dream.id, textController.text);
+                    textController.clear();
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Update"),
+                )
+              ],
+            ));
   }
 
-  void deleteDream(int id){
+  void deleteDream(int id) {
     context.read<DreamDatabase>().deleteDream(id);
   }
 
@@ -78,9 +78,18 @@ class _DreamsPageState extends State<DreamsPage> {
     );
   }
 
+  void navigateToDreamDetail(Dream dream) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DreamDetailPage(dream: dream),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Dream database 
+    // Dream database
     final dreamDatabase = context.watch<DreamDatabase>();
     List<Dream> currentDreams = dreamDatabase.currentDreams;
 
@@ -103,11 +112,14 @@ class _DreamsPageState extends State<DreamsPage> {
               itemCount: currentDreams.length,
               itemBuilder: (context, index) {
                 final dream = currentDreams[index]; // Get 1 dream
-                return DreamTile(
-                  text: dream.content, 
-                  dateTime: formatDate(dream.createdAt), 
-                  onEdit: () => updateDream(dream), 
-                  onDelete: () => deleteDream(dream.id)
+                return GestureDetector(
+                  onTap: () => navigateToDreamDetail(dream),
+                  child: DreamTile(
+                    text: dream.content,
+                    dateTime: formatDate(dream.createdAt),
+                    onEdit: () => updateDream(dream),
+                    onDelete: () => deleteDream(dream.id),
+                  ),
                 );
               },
             ),

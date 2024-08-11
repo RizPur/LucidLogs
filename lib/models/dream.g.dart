@@ -17,35 +17,35 @@ const DreamSchema = CollectionSchema(
   name: r'Dream',
   id: 8844601063810259945,
   properties: {
-    r'category': PropertySchema(
+    r'aiAnalysis': PropertySchema(
       id: 0,
+      name: r'aiAnalysis',
+      type: IsarType.string,
+    ),
+    r'category': PropertySchema(
+      id: 1,
       name: r'category',
       type: IsarType.string,
     ),
     r'content': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'content',
       type: IsarType.string,
     ),
     r'createdAt': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
     r'feeling': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'feeling',
       type: IsarType.string,
     ),
     r'isLucid': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'isLucid',
       type: IsarType.bool,
-    ),
-    r'photoPath': PropertySchema(
-      id: 5,
-      name: r'photoPath',
-      type: IsarType.string,
     ),
     r'tags': PropertySchema(
       id: 6,
@@ -74,6 +74,12 @@ int _dreamEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.aiAnalysis;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.category;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -82,12 +88,6 @@ int _dreamEstimateSize(
   bytesCount += 3 + object.content.length * 3;
   {
     final value = object.feeling;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.photoPath;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -108,12 +108,12 @@ void _dreamSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.category);
-  writer.writeString(offsets[1], object.content);
-  writer.writeDateTime(offsets[2], object.createdAt);
-  writer.writeString(offsets[3], object.feeling);
-  writer.writeBool(offsets[4], object.isLucid);
-  writer.writeString(offsets[5], object.photoPath);
+  writer.writeString(offsets[0], object.aiAnalysis);
+  writer.writeString(offsets[1], object.category);
+  writer.writeString(offsets[2], object.content);
+  writer.writeDateTime(offsets[3], object.createdAt);
+  writer.writeString(offsets[4], object.feeling);
+  writer.writeBool(offsets[5], object.isLucid);
   writer.writeStringList(offsets[6], object.tags);
 }
 
@@ -124,13 +124,13 @@ Dream _dreamDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Dream();
-  object.category = reader.readStringOrNull(offsets[0]);
-  object.content = reader.readString(offsets[1]);
-  object.createdAt = reader.readDateTime(offsets[2]);
-  object.feeling = reader.readStringOrNull(offsets[3]);
+  object.aiAnalysis = reader.readStringOrNull(offsets[0]);
+  object.category = reader.readStringOrNull(offsets[1]);
+  object.content = reader.readString(offsets[2]);
+  object.createdAt = reader.readDateTime(offsets[3]);
+  object.feeling = reader.readStringOrNull(offsets[4]);
   object.id = id;
-  object.isLucid = reader.readBoolOrNull(offsets[4]);
-  object.photoPath = reader.readStringOrNull(offsets[5]);
+  object.isLucid = reader.readBoolOrNull(offsets[5]);
   object.tags = reader.readStringList(offsets[6]) ?? [];
   return object;
 }
@@ -145,15 +145,15 @@ P _dreamDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 4:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 5:
       return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readBoolOrNull(offset)) as P;
     case 6:
       return (reader.readStringList(offset) ?? []) as P;
     default:
@@ -249,6 +249,152 @@ extension DreamQueryWhere on QueryBuilder<Dream, Dream, QWhereClause> {
 }
 
 extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'aiAnalysis',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'aiAnalysis',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'aiAnalysis',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'aiAnalysis',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'aiAnalysis',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'aiAnalysis',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> aiAnalysisIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'aiAnalysis',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterFilterCondition> categoryIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -802,152 +948,6 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'photoPath',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'photoPath',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'photoPath',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'photoPath',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'photoPath',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'photoPath',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> photoPathIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'photoPath',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Dream, Dream, QAfterFilterCondition> tagsElementEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1168,6 +1168,18 @@ extension DreamQueryObject on QueryBuilder<Dream, Dream, QFilterCondition> {}
 extension DreamQueryLinks on QueryBuilder<Dream, Dream, QFilterCondition> {}
 
 extension DreamQuerySortBy on QueryBuilder<Dream, Dream, QSortBy> {
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByAiAnalysis() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'aiAnalysis', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByAiAnalysisDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'aiAnalysis', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterSortBy> sortByCategory() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'category', Sort.asc);
@@ -1227,21 +1239,21 @@ extension DreamQuerySortBy on QueryBuilder<Dream, Dream, QSortBy> {
       return query.addSortBy(r'isLucid', Sort.desc);
     });
   }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> sortByPhotoPath() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> sortByPhotoPathDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.desc);
-    });
-  }
 }
 
 extension DreamQuerySortThenBy on QueryBuilder<Dream, Dream, QSortThenBy> {
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByAiAnalysis() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'aiAnalysis', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByAiAnalysisDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'aiAnalysis', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterSortBy> thenByCategory() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'category', Sort.asc);
@@ -1313,21 +1325,16 @@ extension DreamQuerySortThenBy on QueryBuilder<Dream, Dream, QSortThenBy> {
       return query.addSortBy(r'isLucid', Sort.desc);
     });
   }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> thenByPhotoPath() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterSortBy> thenByPhotoPathDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'photoPath', Sort.desc);
-    });
-  }
 }
 
 extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
+  QueryBuilder<Dream, Dream, QDistinct> distinctByAiAnalysis(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'aiAnalysis', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QDistinct> distinctByCategory(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1361,13 +1368,6 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QDistinct> distinctByPhotoPath(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'photoPath', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Dream, Dream, QDistinct> distinctByTags() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tags');
@@ -1379,6 +1379,12 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
   QueryBuilder<Dream, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Dream, String?, QQueryOperations> aiAnalysisProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'aiAnalysis');
     });
   }
 
@@ -1409,12 +1415,6 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
   QueryBuilder<Dream, bool?, QQueryOperations> isLucidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isLucid');
-    });
-  }
-
-  QueryBuilder<Dream, String?, QQueryOperations> photoPathProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'photoPath');
     });
   }
 
