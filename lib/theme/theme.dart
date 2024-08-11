@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
   colorScheme: ColorScheme.light(
-    surface: Colors.grey.shade300,
-    primary: Colors.blue.shade700, // Adjusted for better contrast
-    secondary: Colors.blue.shade400,
-    inversePrimary: Colors.grey.shade800,
+    surface: Colors.grey.shade200, // Light grey for surfaces
+    primary: Color(0xFF7C4DFF), // Purple
+    secondary: Color(0xFF448AFF), // Blue
+    inversePrimary: Colors.white, // White for inverse primary
   ),
   textTheme: TextTheme(
-    headlineLarge: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+    headlineLarge: TextStyle(
+        fontSize: 32.0, fontWeight: FontWeight.bold, color: Color(0xFF7C4DFF)),
     bodyLarge: TextStyle(fontSize: 16.0, color: Colors.grey.shade800),
     bodyMedium: TextStyle(fontSize: 14.0, color: Colors.grey.shade600),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.blue.shade700, // Background color of the button
-      foregroundColor: Colors.white, // Text and icon color of the button
+      backgroundColor: Color(0xFF7C4DFF), // Purple for buttons
+      foregroundColor: Colors.white, // White text on buttons
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -27,20 +28,21 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   colorScheme: ColorScheme.dark(
-    surface: Colors.grey.shade900,
-    primary: Colors.blueGrey.shade800, // Adjusted for better contrast
-    secondary: Colors.blueGrey.shade600,
-    inversePrimary: Colors.grey.shade300,
+    surface: Colors.grey.shade800, // Dark grey for surfaces
+    primary: Color(0xFF9C27B0), // Lighter Purple for contrast in dark mode
+    secondary: Color(0xFF82B1FF), // Light blue for secondary elements
+    inversePrimary: Colors.grey.shade300, // Light grey for inverse primary
   ),
   textTheme: TextTheme(
-    headlineLarge: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.blueGrey.shade100),
+    headlineLarge: TextStyle(
+        fontSize: 32.0, fontWeight: FontWeight.bold, color: Colors.white),
     bodyLarge: TextStyle(fontSize: 16.0, color: Colors.grey.shade300),
     bodyMedium: TextStyle(fontSize: 14.0, color: Colors.grey.shade500),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.blueGrey.shade700, // Background color of the button
-      foregroundColor: Colors.white, // Text and icon color of the button
+      backgroundColor: Color(0xFF9C27B0), // Lighter purple for buttons
+      foregroundColor: Colors.white, // White text on buttons
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),

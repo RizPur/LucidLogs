@@ -10,7 +10,8 @@ class DreamDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Format the date for display
-    final formattedDate = DateFormat('MMMM dd, yyyy - HH:mm').format(dream.createdAt);
+    final formattedDate =
+        DateFormat('MMMM dd, yyyy - HH:mm').format(dream.createdAt);
 
     return Scaffold(
       appBar: AppBar(
@@ -90,11 +91,22 @@ class DreamDetailPage extends StatelessWidget {
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
-                children: dream.tags.map((tag) => Chip(label: Text(tag))).toList(),
+                children:
+                    dream.tags.map((tag) => Chip(label: Text(tag))).toList(),
+              ),
+              const SizedBox(height: 16),
+            ] else ...[
+              Text(
+                'No tags available',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
               ),
               const SizedBox(height: 16),
             ],
-
             // AI Analysis Section
             if (dream.aiAnalysis != null && dream.aiAnalysis!.isNotEmpty) ...[
               const Divider(thickness: 2),

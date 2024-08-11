@@ -18,7 +18,11 @@ class DreamDatabase extends ChangeNotifier {
   final List<Dream> currentDreams = [];
 
   // Create a new dream entry with optional AI analysis
-  Future<void> addDream(String dreamContent, {String? aiAnalysis, List<String>? tags, String? feeling, bool? isLucid}) async {
+  Future<void> addDream(String dreamContent,
+      {String? aiAnalysis,
+      List<String>? tags,
+      String? feeling,
+      bool? isLucid}) async {
     final newDream = Dream()
       ..content = dreamContent
       ..createdAt = DateTime.now()
@@ -31,7 +35,7 @@ class DreamDatabase extends ChangeNotifier {
     if (aiAnalysis != null) {
       print('AI Analysis: $aiAnalysis');
     }
-    
+
     await isar.writeTxn(() => isar.dreams.put(newDream));
     await getDreams(); // Refresh the list after adding a new dream
   }
@@ -66,7 +70,8 @@ class DreamDatabase extends ChangeNotifier {
 
   // Send the dream content to the backend and receive the analysis
   Future<String> sendDreamToBackend(String content) async {
-    const String backendUrl = 'https://296a-72-252-123-133.ngrok-free.app/chat/completions';
+    const String backendUrl =
+        'https://1ecb-72-252-123-133.ngrok-free.app/chat/completions';
 
     try {
       final response = await http.post(
@@ -95,7 +100,8 @@ class DreamDatabase extends ChangeNotifier {
   }
 
   Future<String> troubleshootRequest() async {
-    const String backendUrl = 'https://296a-72-252-123-133.ngrok-free.app/chat/completions';
+    const String backendUrl =
+        'https://1ecb-72-252-123-133.ngrok-free.app/chat/completions';
     final url = Uri.parse(backendUrl);
 
     try {
