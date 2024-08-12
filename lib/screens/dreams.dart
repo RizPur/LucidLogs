@@ -38,28 +38,95 @@ class _DreamsPageState extends State<DreamsPage> {
   }
 
   void updateDream(Dream dream) {
-    textController.text = dream.content; //fill textfield with dream content
+    // Initialize controllers with the current dream data
+    final TextEditingController contentController = TextEditingController(text: dream.content);
+    final TextEditingController tagsController = TextEditingController(text: dream.tags.join(', '));
+    String selectedFeeling = dream.feeling ?? 'Neutral';
+    bool isLucid = dream.isLucid ?? false;
+
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              title: const Text("Modify Dream"),
-              content: TextField(controller: textController),
-              actions: [
-                MaterialButton(
-                  onPressed: () {
-                    //update
-                    context
-                        .read<DreamDatabase>()
-                        .updateDream(dream.id, textController.text);
-                    textController.clear();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Update"),
-                )
-              ],
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text("Modify Dream"),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: contentController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  hintText: 'Edit dream content...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Tags input
+              TextField(
+                controller: tagsController,
+                decoration: const InputDecoration(
+                  hintText: 'Edit tags (comma-separated)',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Feeling selection
+              DropdownButtonFormField<String>(
+                value: selectedFeeling,
+                items: ['Good', 'Neutral', 'Bad'].map((feeling) {
+                  return DropdownMenuItem<String>(
+                    value: feeling,
+                    child: Text(feeling),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  selectedFeeling = newValue!;
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Select Feeling',
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Lucid checkbox
+              CheckboxListTile(
+                title: const Text('Was this a lucid dream?'),
+                value: isLucid,
+                onChanged: (bool? newValue) {
+                  isLucid = newValue ?? false;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            onPressed: () async {
+              // Prepare tags
+              List<String> tags = tagsController.text.split(',').map((tag) => tag.trim()).toList();
+
+              // Update the dream with all new values
+              await context.read<DreamDatabase>().updateDream(
+                    dream.id,
+                    content: contentController.text,
+                    tags: tags,
+                    feeling: selectedFeeling,
+                    isLucid: isLucid,
+                  );
+
+              Navigator.pop(context);
+            },
+            child: const Text("Update"),
+          )
+        ],
+      ),
+    );
   }
+
 
   void deleteDream(int id) {
     context.read<DreamDatabase>().deleteDream(id);
