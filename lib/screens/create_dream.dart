@@ -123,12 +123,46 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
     }
   }
 
-  void _analyzeDream() async {
-    if (_dreamController.text.isNotEmpty) {
+void _analyzeDream() async {
+  if (_dreamController.text.isNotEmpty) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String? aiAnalysis;
+    String? message;
+
+    try {
+      final dreamDatabase = context.read<DreamDatabase>();
+      aiAnalysis = await dreamDatabase.sendDreamToBackend(_dreamController.text);
+
+      // Prepare tags
+      List<String> tags = _tagsController.text.split(',').map((tag) => tag.trim()).toList();
+
+      // Log the dream with AI analysis
+      await dreamDatabase.addDream(
+        _dreamController.text,
+        aiAnalysis: aiAnalysis,
+        tags: tags,
+        feeling: _selectedFeeling,
+        isLucid: _isLucid,
+      );
+
       setState(() {
-        _isLoading = true;
+        _aiResponse = aiAnalysis;
       });
 
+      message = 'Dream analyzed and logged successfully!';
+    } catch (e) {
+      setState(() {
+        _aiResponse = "Failed to analyze dream: $e";
+      });
+      message = 'Failed to analyze dream. Please try again.';
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+      
       try {
         final dreamDatabase = context.read<DreamDatabase>();
         final aiAnalysis =
@@ -166,8 +200,22 @@ class _CreateDreamPageState extends State<CreateDreamPage> {
           _isLoading = false;
         });
       }
+      // Show a SnackBar with the result
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message ?? 'N/A'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // Wait for the SnackBar to disappear before popping the page
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pop(context);
+      });
     }
   }
+}
+
 
   void _scrollLeft() {
     _pageController.previousPage(

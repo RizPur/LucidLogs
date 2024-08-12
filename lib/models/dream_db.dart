@@ -51,12 +51,23 @@ class DreamDatabase extends ChangeNotifier {
   }
 
   // Update an existing dream entry
-  Future<void> updateDream(int id, String newContent) async {
+// Update an existing dream entry
+Future<void> updateDream(
+    int id, {
+    required String content,
+    List<String>? tags,
+    String? feeling,
+    bool? isLucid,
+  }) async {
     final dream = await isar.dreams.get(id);
     if (dream != null) {
-      dream.content = newContent;
+      dream.content = content;
+      dream.tags = tags ?? [];
+      dream.feeling = feeling ?? 'Neutral';
+      dream.isLucid = isLucid ?? false;
+
       await isar.writeTxn(() => isar.dreams.put(dream));
-      print('Updated dream id $id with new content: $newContent');
+      print('Updated dream id $id with new content');
       await getDreams(); // Refresh the list after updating
     }
   }
