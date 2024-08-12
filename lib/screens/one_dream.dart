@@ -37,10 +37,12 @@ class DreamDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Dream content
+            // Dream content highlighted by bold text
             Text(
               dream.content,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold, // Bold the dream content
+                    color: Theme.of(context).colorScheme.onSurface,
                     height: 1.5, // Better readability
                   ),
             ),
@@ -107,7 +109,8 @@ class DreamDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
             ],
-            // AI Analysis Section
+            
+            // AI Analysis Section in a container
             if (dream.aiAnalysis != null && dream.aiAnalysis!.isNotEmpty) ...[
               const Divider(thickness: 2),
               const SizedBox(height: 16),
@@ -119,11 +122,22 @@ class DreamDetailPage extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 8),
-              Text(
-                dream.aiAnalysis!,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      height: 1.5,
-                    ),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12.0),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 1.5,
+                  ),
+                ),
+                child: Text(
+                  dream.aiAnalysis!,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        height: 1.5,
+                      ),
+                ),
               ),
             ],
           ],
