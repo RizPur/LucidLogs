@@ -1,17 +1,15 @@
 import 'package:isar/isar.dart';
 
-part 'dream.g.dart'; //line needed to generate file.
-//then run: dart run build_runner build
+part 'dream.g.dart';
 
-@Collection() // class is a collection in the Isar database.. just helps Isar to understand how to seralize objects before storing and for CRUD operations
+@Collection()
 class Dream {
   Id id = Isar.autoIncrement;
   late String content;
   late DateTime createdAt;
-  String? aiAnalysis = '';
-  String? feeling = 'Neutral';
-  String? category = '';
-  bool? isLucid = false;
-  
+  String? aiAnalysis;
+  String? feeling;
+  String? category;
+  bool? isLucid;
   List<String> tags = [];
 }

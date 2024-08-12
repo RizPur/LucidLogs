@@ -164,34 +164,51 @@ class _DreamsPageState extends State<DreamsPage> {
       appBar: AppBar(
         title: Text("Dreams", style: GoogleFonts.dmSerifText(fontSize: 36.0)),
         backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: navigateToAddDreamPage,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: currentDreams.length,
-              itemBuilder: (context, index) {
-                final dream = currentDreams[index]; // Get 1 dream
-                return GestureDetector(
-                  onTap: () => navigateToDreamDetail(dream),
-                  child: DreamTile(
-                    text: dream.content,
-                    dateTime: formatDate(dream.createdAt),
-                    onEdit: () => updateDream(dream),
-                    onDelete: () => deleteDream(dream.id),
-                  ),
-                );
-              },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: currentDreams.isEmpty
+                  ? Center(
+                      child: Text(
+                        "Welcome to LucidLogs! Start by adding a dream.",
+                        style: GoogleFonts.dmSerifText(
+                          fontSize: 18.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: currentDreams.length,
+                      itemBuilder: (context, index) {
+                        final dream = currentDreams[index]; // Get 1 dream
+                        return GestureDetector(
+                          onTap: () => navigateToDreamDetail(dream),
+                          child: DreamTile(
+                            text: dream.content,
+                            dateTime: formatDate(dream.createdAt),
+                            onEdit: () => updateDream(dream),
+                            onDelete: () => deleteDream(dream.id),
+                            feeling: dream.feeling ??
+                                'Neutral', // Provide a default value for the feeling
+                          ),
+                        );
+                      },
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
